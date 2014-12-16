@@ -17,9 +17,26 @@ function hintondiag(matrix::Matrix{Float64}; w_frame = 400, h_frame = 400)
 
     win = Toplevel("weight matrix", w_frame, h_frame);
     can = Canvas(win);
-    pack(can, expand = false, fill = "both");
+    pack(can, expand = true, fill = "both");
+    draw_diag(can, matrix);
 
+    # For resizing
+    can.resize = can->draw_diag(can, matrix);
+    
+end
+
+function draw_diag(can::Canvas, matrix::Matrix{Float64})
+    # Actual drawing function, separated to support resizing
+    #
+    # Parameters
+    # ----------
+    # can : Canvas
+    # matrix : the weight matrix to be visualized
+    
     context = getgc(can);
+
+    w_frame = Tk.width(can);
+    h_frame = Tk.height(can);
 
     set_coords(context, 0, 0, w_frame, h_frame, 0, w_frame, 0, h_frame);
     set_source_rgb(context, 0.5, 0.5, 0.5); # Set background to gray
@@ -51,8 +68,13 @@ end
 
 function draw_block(ctx::CairoContext, x, y, area, color)
     # Draws block of given size on the context
-    # x, y define the center of block
-    # color 1 = white, 0 = black
+    #
+    # Parameters
+    # ----------
+    # ctx : the context of canvas
+    # x, y : the center of the block
+    # area : area of the square
+    # color : 1 = white, 0 = black
 
     side = sqrt(area);
     rectangle(ctx, x - side / 2, y - side / 2, side, side);
