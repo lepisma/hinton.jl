@@ -6,16 +6,25 @@ using Tk
 using Base.Graphics
 using Cairo
 
-function hintondiag(matrix::Matrix{Float64}; w_frame = 400, h_frame = 400)
+function hintondiag(matrix::Matrix{Float64}; default_size = 400)
     # Makes hinton diagram of the given matrix
     #
     # Parameters
     # ----------
     # matrix : the weight matrix to be visualized
-    # w_frame : width of the window in pixels
-    # h_frame : height of the window in pixels
+    # default_size : default size along max dimension in pixels
 
-    win = Toplevel("weight matrix", w_frame, h_frame);
+    height, width = size(matrix);
+    
+    if height < width
+        w_frame = default_size;
+        h_frame = w_frame * height / width;
+    else
+        h_frame = default_size;
+        w_frame = h_frame * width / height;
+    end
+
+    win = Toplevel("weight matrix", int(w_frame), int(h_frame));
     can = Canvas(win);
     pack(can, expand = true, fill = "both");
     draw_diag(can, matrix);
