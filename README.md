@@ -7,6 +7,10 @@ Hinton diagrams are used to visualize weight matrices in neural networks. Here i
 ### Usage
 
 ```julia
+Pkg.clone("git://github.com/lepisma/hinton.jl.git")
+```
+
+```julia
 using hinton
 
 hintondiag(matrix)
